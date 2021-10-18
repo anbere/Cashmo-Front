@@ -14,7 +14,7 @@ const Login = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         // const { user, pass } = formValue;
-        console.log(formValue.username);
+        // console.log(formValue.username);
 
         // if(username.trim() && password.trim()) {
         //     localStorage.setItem('token', '123');
@@ -43,14 +43,12 @@ const Login = () => {
                     username: formValue.username,
                     password: formValue.password
                 })
-            })
-            .then(response => {
-                if(response.ok)
-                {
-                    localStorage.setItem('token', '123');
-                    history.push("/")
+            }).then(res => {
+                if(res.ok){
+                    console.log(res);
+                    return res.json();
                 }
-            })
+            }).then(body => console.log(body));
     }
 
     const handleChange = (event) => {
