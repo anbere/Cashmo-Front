@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState }from "react";
 import { useHistory, Link } from "react-router-dom";
 
@@ -48,7 +47,15 @@ const Login = () => {
                     console.log(res);
                     return res.json();
                 }
-            }).then(body => console.log(body));
+            }).then(body => 
+                {
+                    console.log(body)
+                    if(!body.username=="")
+                    {
+                        localStorage.setItem('token', '123');
+                        history.push("/");
+                    }else(alert("Invalid login"))
+                });
     }
 
     const handleChange = (event) => {
