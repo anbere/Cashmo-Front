@@ -3,6 +3,13 @@ import { useHistory } from "react-router-dom";
 
 const Account = () => {
     
+    const userData = {
+        username: 'anbers',
+        email: 'anbers@gmail.com',
+        firstName: 'Andres',
+        lastName: 'Rodriguez'
+    };
+
     const history = useHistory();
 
     const handleLogout = () => {

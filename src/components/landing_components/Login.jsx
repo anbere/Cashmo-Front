@@ -42,16 +42,17 @@ const Login = () => {
                     username: formValue.username,
                     password: formValue.password
                 })
-            }).then(res => {
-                if(res.ok){
-                    console.log(res);
-                    return res.json();
+            }).then(response => {
+                if(response.ok){
+                    console.log(response);
+                    return response.json();
                 }
             }).then(body => 
                 {
                     console.log(body)
                     if(!body.username=="")
                     {
+                        //
                         localStorage.setItem('token', '123');
                         history.push("/");
                     }else(alert("Invalid login"))

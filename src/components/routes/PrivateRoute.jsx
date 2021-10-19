@@ -5,6 +5,7 @@ import Money from "../home_components/Money"
 import Friends from "../home_components/Friends";
 import Account from "../home_components/Account";
 import { Nav, Navbar, Container} from "react-bootstrap";
+import '../../App.css';
 
 const PrivateRoute = () => {
     return (
@@ -12,7 +13,7 @@ const PrivateRoute = () => {
             <Navbar bg="light" expand="lg">
                 <Container>
                     <Navbar.Brand>CashMo</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
 
