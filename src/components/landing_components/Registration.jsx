@@ -55,61 +55,61 @@ const Registration = () => {
     }
 
     return (
-        <>
-        <form onSubmit={handleSubmit}>
-            <p>Register a new account</p>
+        <div className="App">
+            <form className="logister" onSubmit={handleSubmit}>
+                <p>Register a new account</p>
 
-            <input 
-                type="text"
-                name="username" 
-                placeholder="Username"
-                vlue={formValue.username}
-                onChange={handleChange}
-                autoComplete="off" 
-            />
-            <br/>
-            <input 
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formValue.password}
-                onChange={handleChange} 
-            />
-            <br/>
-            <input 
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formValue.email}
-                onChange={handleChange} 
-            />
-            <br/>
-            <input 
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={formValue.firstName}
-                onChange={handleChange} 
-            />
-            <br/>
-            <input 
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={formValue.lastName}
-                onChange={handleChange} 
-            />
-            <br/>
-            <button
-                color="primary"
-                type="submit"
-            >
-                Register
-            </button>
-        </form>
+                <input 
+                    type="text"
+                    name="username" 
+                    placeholder="Username"
+                    vlue={formValue.username}
+                    onChange={handleChange}
+                    autoComplete="off" 
+                />
+                <br/>
+                <input 
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formValue.password}
+                    onChange={handleChange} 
+                />
+                <br/>
+                <input 
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formValue.email}
+                    onChange={handleChange} 
+                />
+                <br/>
+                <input 
+                    type="text"
+                    name="firstName"
+                    placeholder="First Name"
+                    value={formValue.firstName}
+                    onChange={handleChange} 
+                />
+                <br/>
+                <input 
+                    type="text"
+                    name="lastName"
+                    placeholder="Last Name"
+                    value={formValue.lastName}
+                    onChange={handleChange} 
+                />
+                <br/>
+                <button
+                    color="primary"
+                    type="submit"
+                >
+                    Register
+                </button>
+            </form>
 
-        <Link to="/login">Return to Login</Link>
-    </>
+            <Link to="/login">Return to Login</Link>
+        </div>
     )
 }
 

@@ -1,7 +1,11 @@
-import React, { useState }from "react";
+import React, { useContext, useState }from "react";
 import { useHistory, Link } from "react-router-dom";
+import { UserContext } from "../user/UserContext";
 
 const Login = () => {
+
+    const userContext = useContext(UserContext);
+    const [userData, setUserData] = userContext.userData;
 
     const history = useHistory();
 
@@ -12,26 +16,6 @@ const Login = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // const { user, pass } = formValue;
-        // console.log(formValue.username);
-
-        // if(username.trim() && password.trim()) {
-        //     localStorage.setItem('token', '123');
-        //     history.push("/");
-        // }
-
-        // axios.post("http://localhost:8080/api/v1/user/login", 
-        //     {
-        //         username: user,
-        //         password: pass
-        //     },
-        //     { headers: { "Content-Type": "application/json",
-        //                  "Access-Control-Allow-Origin": "true",
-        //                  'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS'}, withCredentials: true }
-        // )
-        // .then((response) => {
-        //     console.log(response);
-        // })
 
         fetch("http://localhost:8080/api/v1/user/login",
             {
@@ -52,8 +36,8 @@ const Login = () => {
                     console.log(body)
                     if(!body.username=="")
                     {
-                        //
-                        localStorage.setItem('token', '123');
+                        setUserData(body);
+                        sessionStorage.setItem('token', '123');
                         history.push("/");
                     }else(alert("Invalid login"))
                 });
@@ -67,17 +51,18 @@ const Login = () => {
     }
 
     return (
-        <>
-            <form onSubmit={handleSubmit}>
+        <div className="App">
+            <form className="logister" onSubmit={handleSubmit}>
                 <p>Login to Get Started</p>
                 <input 
                     type="text"
                     name="username" 
                     placeholder="Username"
-                    vlue={formValue.username}
+                    value={formValue.username}
                     onChange={handleChange}
                     autoComplete="off" 
                 />
+                <br/>
                 <input 
                     type="password"
                     name="password"
@@ -85,6 +70,7 @@ const Login = () => {
                     value={formValue.password}
                     onChange={handleChange} 
                 />
+                <br/>
                 <button
                     color="primary"
                     type="submit"
@@ -94,7 +80,7 @@ const Login = () => {
             </form>
 
             <Link to="/registration">Register</Link>
-        </>
+        </div>
     )
 
 };

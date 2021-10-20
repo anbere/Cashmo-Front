@@ -1,3 +1,54 @@
+.App {
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 22px;
+    padding-top: 100px;
+}
+
+.logister input {}
+
+.user-deets {
+    /* text-align: left; */
+    /* margin-left: 35%; */
+}
+
+.user-deets img {
+    margin-bottom: 20px;
+    border: 1px solid;
+    box-shadow: 6px 6px;
+    border-radius: 100%;
+    width: 300px;
+}
+
+.user-deets h3 {
+    font-size: 50px;
+    margin: 0 0 20px;
+}
+
+.user-deets strong {
+    display: block;
+    font-size: 14px;
+    opacity: 0.4;
+    margin-bottom: 6px;
+}
+
+.editBtn {
+    padding-left: 18px;
+    padding-right: 18px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.logoutBtn {
+    padding-left: 50px;
+    padding-right: 50px;
+    font-size: 18px;
+}
+
+.accountBtn {
+    font-size: 14px;
+}
+
 .wrapper {
     padding: 20px;
 }
