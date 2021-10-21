@@ -7,7 +7,7 @@ import Account from "../home_components/Account";
 import { Nav, Navbar, Container} from "react-bootstrap";
 import '../../App.css';
 
-const PrivateRoute = () => {
+const PrivateRoute = (props) => {
     return (
         <>
             <Navbar bg="light" expand="lg">

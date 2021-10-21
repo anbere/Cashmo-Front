@@ -1,9 +1,12 @@
 import React from "react";
 
 const HomePage = () => {
+
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+
     return (
         <>
-            <p>Welcome, User</p>
+            <p>Welcome, {userData.username}</p>
         </>
     )
 }

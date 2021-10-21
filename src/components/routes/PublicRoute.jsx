@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import Login from '../landing_components/Login'
 import Registration from "../landing_components/Registration";
 
-const PublicRoute = () => {
+const PublicRoute = (props) => {
     return (
         <Switch>
             <Route path="/login" exact component={Login} />

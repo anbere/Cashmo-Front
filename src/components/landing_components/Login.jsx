@@ -1,11 +1,8 @@
-import React, { useContext, useState }from "react";
+import React, { useState }from "react";
 import { useHistory, Link } from "react-router-dom";
-import { UserContext } from "../user/UserContext";
+import { Button } from "react-bootstrap";
 
 const Login = () => {
-
-    const userContext = useContext(UserContext);
-    const [userData, setUserData] = userContext.userData;
 
     const history = useHistory();
 
@@ -13,6 +10,29 @@ const Login = () => {
         username: '',
         password: ''
     });
+    
+    function getAccount(id) {
+        const url='http://localhost:8080/api/v1/account/'+id;
+        fetch(url,
+            {
+                method: "GET",
+                mode: 'cors',
+                headers: {"Content-Type": "application/json"},
+            }).then(response => {
+                if(response.ok){
+                    console.log(response);
+                    return response.json();
+                }
+            }).then(body => 
+                {
+                    console.log(body)
+                    if(!body.id == "")
+                    {
+                        console.log(body);
+                        sessionStorage.setItem('account', JSON.stringify(body));
+                    }else(alert("account not receieved"))
+                });
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -36,11 +56,13 @@ const Login = () => {
                     console.log(body)
                     if(!body.username=="")
                     {
-                        setUserData(body);
-                        sessionStorage.setItem('token', '123');
+                        getAccount(body.id);
+                        sessionStorage.setItem('user', JSON.stringify(body));
                         history.push("/");
                     }else(alert("Invalid login"))
                 });
+
+        
     }
 
     const handleChange = (event) => {
@@ -71,12 +93,12 @@ const Login = () => {
                     onChange={handleChange} 
                 />
                 <br/>
-                <button
+                <Button
                     color="primary"
                     type="submit"
                 >
                     Login
-                </button>
+                </Button>
             </form>
 
             <Link to="/registration">Register</Link>

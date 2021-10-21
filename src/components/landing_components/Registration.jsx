@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 import { Link } from 'react-router-dom'
 
@@ -63,7 +64,7 @@ const Registration = () => {
                     type="text"
                     name="username" 
                     placeholder="Username"
-                    vlue={formValue.username}
+                    value={formValue.username}
                     onChange={handleChange}
                     autoComplete="off" 
                 />
@@ -100,12 +101,12 @@ const Registration = () => {
                     onChange={handleChange} 
                 />
                 <br/>
-                <button
+                <Button
                     color="primary"
                     type="submit"
                 >
                     Register
-                </button>
+                </Button>
             </form>
 
             <Link to="/login">Return to Login</Link>

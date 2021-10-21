@@ -1,36 +1,32 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
-import { UserContext } from "../user/UserContext";
+import { Button, Container, Row, Col, Modal } from "react-bootstrap";
+import CustModal from "./CustModal";
 
 const Account = () => {
 
-    const userContext = useContext(UserContext);
-    const [userData, setUserData] = userContext.userData;
+    const [modalShow, setModalShow] = useState(false);
+    const [updateInfo, setUpdateInfo] = useState({})
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+    const userAccount = JSON.parse(sessionStorage.getItem('account'));
 
     const history = useHistory();
 
     const handleLogout = () => {
         console.log("Logging out")
         sessionStorage.clear();
-        setUserData(null);
         history.push("/");
     }
 
-    const userAccount = {
-        balance: '$500',
-        accountNumber: ''
-    }
-
     function AccountView() {
-        if (userAccount.accountNumber !== '') {
+        if (userAccount.routingNumber !== '') {
             return (
                 <div className="user-deets">
                     <strong>Account Balance</strong> {userAccount.balance}
                     <br />
-                    <button className="accountBtn">Deposit</button>
+                    <Button className="accountBtn">Deposit</Button>
                     <p>
-                        <strong>Account Number</strong> {userAccount.accountNumber}
+                        <strong>Account Number</strong> {userAccount.routingNumber}
                     </p>
                 </div>
             )
@@ -40,7 +36,7 @@ const Account = () => {
                     <p>
                         <strong>Account Balance</strong> {userAccount.balance}
                     </p>
-                    <button className="accountBtn">Link Bank Account</button>
+                    <Button className="accountBtn">Link Bank Account</Button>
                 </div>
             )
         }
@@ -70,9 +66,14 @@ const Account = () => {
                         <p>
                             <strong>Last Name</strong> {userData.lastName}
                         </p>
-                        <button className="editBtn">Edit Profile</button>
+                        <Button className="editBtn" onClick={() => setModalShow(true)}>Edit Profile</Button>
                         <br />
-                        <button className="logoutBtn" onClick={handleLogout}>Logout</button>
+                        <Button className="logoutBtn" onClick={handleLogout}>Logout</Button>
+
+                        <CustModal
+                            show={modalShow}
+                            onSubmit={() => setUpdateInfo()}
+                            onHide={() => setModalShow(false)} />
                     </div>
                 </Col>
             </Row>
@@ -83,7 +84,6 @@ const Account = () => {
             </Row>
         </Container>
     )
-
 
 }
 
