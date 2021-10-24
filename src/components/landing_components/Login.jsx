@@ -34,6 +34,26 @@ const Login = () => {
                 });
     }
 
+    function getTransactions() {
+        const url='http://localhost:8080/api/v1/transaction';
+
+        fetch(url,
+            {
+                method: "GET",
+                mode: 'cors',
+                headers: {"Content-Type": "application/json"},
+            }).then(response => {
+                if(response.ok){
+                    console.log(response);
+                    return response.json();
+                }
+            }).then(body => 
+                {
+                    console.log("List of transactions: ", body);
+                    sessionStorage.setItem('transactions', JSON.stringify(body))
+                });
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -57,6 +77,7 @@ const Login = () => {
                     if(!body.username=="")
                     {
                         getAccount(body.id);
+                        getTransactions();
                         sessionStorage.setItem('user', JSON.stringify(body));
                         history.push("/");
                     }else(alert("Invalid login"))
