@@ -19,8 +19,8 @@ const Registration = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const { username, password, email, firstName, lastName } = formValue;
-        console.log(username, password, email, firstName, lastName)
+        // const { username, password, email, firstName, lastName } = formValue;
+        // console.log(username, password, email, firstName, lastName)
 
         fetch("http://localhost:8080/api/v1/user",
             {

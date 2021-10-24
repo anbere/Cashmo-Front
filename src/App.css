@@ -6,7 +6,17 @@
 }
 
 .App2 {
+    font-size: 22px;
     text-align: center;
+}
+
+.App2 input {
+    /* font-size: 22px; */
+    margin-left: 15px;
+}
+
+.App2 label {
+    text-align: left;
 }
 
 .user-deets {
