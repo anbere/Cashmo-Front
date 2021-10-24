@@ -1,28 +1,60 @@
+import e from "cors";
 import React, {useState} from "react";
+import { useHistory } from "react-router";
 import { Button, Container, Row, Col, Modal } from "react-bootstrap";
 
 const Friends = () => {
+
+    const history = useHistory();
     const userData = JSON.parse(sessionStorage.getItem('user'));
     const userFriend = JSON.parse(sessionStorage.getItem('friends'));
 
-    const [formValue, setformValue] = useState({
-        username: '',
-        password: ''
-    });
+    const [friendName, setFriendName] = useState('');
 
-    function addFriends(friendsOf) {
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        console.log(friendName);
+        addFriends(friendName);
+    }
+
+    function addFriends(friendUsername) {
         console.log("Below is FriendsOf");
-        console.log(friendsOf);
+        console.log(friendUsername);
+        console.log(userData)
 
-        const url='http://localhost:8080/api/v1/friends/'+userData.username;
+        const url='http://localhost:8080/api/v1/friends/'+friendUsername;
+        fetch(url,
+            {
+                method: "POST",
+                mode: 'cors',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(userData) //sending in the user object and a username
+
+            }).then(response => {
+                if(response.ok){
+                    console.log(response);
+                    return response.json();
+                }
+            }).then(body => 
+                {
+                    console.log(body)
+                    getFriends();
+                    // history.push("/friends")
+                    alert("Friend Added!")
+                });
+    }
+
+    function getFriends() {
+        console.log("Below is FriendsOf");
+        const url='http://localhost:8080/api/v1/friends/';
         fetch(url,
             {
                 method: "POST",
                 mode: 'cors',
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
-                    username: formValue.username,
-                    password: formValue.password
+                    username: userData.username,
+                    password: userData.password
                 })
             }).then(response => {
                 if(response.ok){
@@ -32,80 +64,49 @@ const Friends = () => {
             }).then(body => 
                 {
                     sessionStorage.setItem('friends', JSON.stringify(body));
+                    history.push("/friends")
                     console.log(body)
                 });
     }
-
-    function searchUser(user) {
-        console.log("Below is Search User");
-        console.log(user);
-        
-        const url='http://localhost:8080/api/v1/user/searchUser/'+userData.username;
-        fetch(url,
-            {
-                method: "POST",
-                mode: 'cors',
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    username: formValue.username,
-                })
-            }).then(response => {
-                if(response.ok){
-                    console.log('response object: ');
-                    console.log(response);
-
-                    if(!response.username == ""){
-                        <h3>response.username</h3>
-
-
-                        console.log(response.username)
-                    }
-                    else{
-                        alert("User not found!")
-                    }
-                    // return response.json();
-                }
-            })
-            // .then(body => 
-            //     {
-            //         sessionStorage.setItem('friends', JSON.stringify(body));
-            //         console.log(body)
-            //     });
-
-    }
-
     return (
         <Container fluid = "true" >
             <Row >
                 <Col>
                     <h1>
-                        Friends' List
+                        Friends
                     </h1>
-
                     <table>
-                        <tr>
-                            <td>First Name</td>
-                            <td>Last Name</td>
-                            <td>Email</td>
-                            
-                        </tr>
+                        <thead>
+                            <tr style={{fontWeight: "BOLD", color: "red", backgroundColor: "white"}}>
+                                <td>Username</td>
+                                <td>First Name</td>
+                                <td>Last Name</td>
+                                <td>Email</td>
+                            </tr>
+                        </thead>
 
-
+                        <tbody> {
+                            userFriend.map((friends) => (
+                                <tr key = {friends.id}>
+                                    <td>{friends.username}</td>
+                                    <td>{friends.firstName}</td>
+                                    <td>{friends.lastName}</td>
+                                    <td>{friends.email}</td>
+                                </tr>   
+                                ))}            
+                        </tbody>
                     </table>
-                
-                
                 </Col>
 
                 <Col>
-                
-           
                     <h1>
                         Add Friend
                         <br/>
                     </h1>
-                    <h5>  <input type="text" placeholder = "Search Username" />
-                    <Button className = "addFriend" onClick = {searchUser}>Search</Button>
-                    </h5>
+                    <form onSubmit = {handleSubmit}>  
+                        <input type="text" onChange = {(e) => setFriendName(e.target.value)} value = {friendName}  placeholder = "Friend Username"/>
+                        <Button type = "submit" className = "addFriend">Search</Button>
+                    </form>
 
                 </Col>
 
