@@ -1,16 +1,23 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Container, Row, Col, Modal } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import CustModal from "./CustModal";
+import NumberFormat from "react-number-format";
 
 const Account = () => {
 
+    const history = useHistory();
+
     const [modalShow, setModalShow] = useState(false);
-    const [updateInfo, setUpdateInfo] = useState({})
+
     const userData = JSON.parse(sessionStorage.getItem('user'));
     const userAccount = JSON.parse(sessionStorage.getItem('account'));
 
-    const history = useHistory();
+    const [routingNumber, setRoutingNumber] = useState({
+        ...userAccount
+    });
+
+    const [depositTransaction, setDepositTransaction] = useState({})
 
     const handleLogout = () => {
         console.log("Logging out")
@@ -18,13 +25,107 @@ const Account = () => {
         history.push("/");
     }
 
+    const handleAccountChange = (event) => {
+        setRoutingNumber({
+            ...userAccount,
+            [event.target.name]: event.target.value
+        })
+    }
+
+    const handleDepositChange = (event) => {
+        setDepositTransaction({
+            "type": "Deposit",
+            [event.target.name]: event.target.value,
+            "comment": ''
+        })
+    }
+
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      
+        // These options are needed to round to whole numbers if that's what you want.
+        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+      });
+
+    const linkAccount = (event) =>
+    {
+        event.preventDefault();
+        console.log("Account before sent: ", routingNumber);
+
+        fetch("http://localhost:8080/api/v1/account",
+            {
+                method: "PUT",
+                mode: 'cors',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(routingNumber)
+            }).then(response => response.json()
+            )
+            .then(body => {
+                console.log("body: ", body)
+                if(body.routingNumber !== null) {
+                  sessionStorage.setItem('account', JSON.stringify(body))
+                  history.push("/account");
+                  alert("Bank account linked");
+                }
+                else{
+                    alert("Bank account not linked");
+                }
+            })
+    }
+
+    const sendDeposit = (event) =>
+    {
+        event.preventDefault();
+        console.log("Deposit Transaction before sent: ", depositTransaction);
+
+        const url = "http://localhost:8080/api/v1/transaction/deposit/"+userData.username;
+        fetch(url,
+            {
+                method: "POST",
+                mode: 'cors',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(depositTransaction)
+            }).then(response => response.json()
+            )
+            .then(body => {
+                console.log("body received form sendDeposit: ", body)
+                if(body.id !== null) {
+                    sessionStorage.setItem('account', JSON.stringify(body))
+                    history.push("/account");
+                    alert("Deposit succesful")
+                }
+                else{
+                    alert("Deposit failed")
+                }
+            })
+    }
+    
+
+    // const update = () => {
+    //     userData = JSON.parse(sessionStorage.getItem('user'));
+    // }
+
     function AccountView() {
-        if (userAccount.routingNumber !== '') {
+        if (userAccount.routingNumber !== null) {
             return (
                 <div className="user-deets">
-                    <strong>Account Balance</strong> {userAccount.balance}
-                    <br />
-                    <Button className="accountBtn">Deposit</Button>
+                    <p>
+                        <strong>Account Balance</strong> 
+                        <NumberFormat value={ userAccount.balance } displayType={'text'} thousandSeparator={true} decimalScale={2} fixedDecimalScale={true} prefix={'$'} />
+                    </p>
+                    
+                    <form >
+                        <input 
+                            type="text" 
+                            name="amount"
+                            placeholder="Deposit Amount" 
+                            onChange={handleDepositChange}
+                            autoComplete="off"
+                            />
+                        <Button className="accountBtn" onClick={sendDeposit}>Deposit</Button>
+                    </form>
                     <p>
                         <strong>Account Number</strong> {userAccount.routingNumber}
                     </p>
@@ -34,9 +135,19 @@ const Account = () => {
             return (
                 <div>
                     <p>
-                        <strong>Account Balance</strong> {userAccount.balance}
+                        <strong>Account Balance</strong> 
+                        <NumberFormat value={userAccount.balance} displayType={'text'} decimalScale={2} fixedDecimalScale={true} thousandSeparator={true} prefix={'$'} />
                     </p>
-                    <Button className="accountBtn">Link Bank Account</Button>
+                    <form>
+                        <input 
+                            type="text" 
+                            name="routingNumber"
+                            placeholder="Routing Number" 
+                            onChange={handleAccountChange}
+                            />
+                        <Button className="accountBtn" onClick={linkAccount}>Link Bank Account</Button>
+                    </form>
+                    
                 </div>
             )
         }
@@ -72,8 +183,10 @@ const Account = () => {
 
                         <CustModal
                             show={modalShow}
-                            onSubmit={() => setUpdateInfo()}
-                            onHide={() => setModalShow(false)} />
+                            user={userData}
+                            update={() => console.log("heh")}
+                            onHide={() => setModalShow(false)} 
+                        />
                     </div>
                 </Col>
             </Row>
