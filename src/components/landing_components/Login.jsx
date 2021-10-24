@@ -10,6 +10,31 @@ const Login = () => {
         username: '',
         password: ''
     });
+
+    function getFriends(friendsOf) {
+        console.log("Below is FriendsOf");
+        console.log(friendsOf);
+        const url='http://localhost:8080/api/v1/friends/';
+        fetch(url,
+            {
+                method: "POST",
+                mode: 'cors',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    username: formValue.username,
+                    password: formValue.password
+                })
+            }).then(response => {
+                if(response.ok){
+                    console.log(response);
+                    return response.json();
+                }
+            }).then(body => 
+                {
+                    sessionStorage.setItem('friends', JSON.stringify(body));
+                    console.log(body)
+                });
+    }
     
     function getAccount(id) {
         const url='http://localhost:8080/api/v1/account/'+id;
@@ -57,6 +82,7 @@ const Login = () => {
                     if(!body.username=="")
                     {
                         getAccount(body.id);
+                        getFriends(body);
                         sessionStorage.setItem('user', JSON.stringify(body));
                         history.push("/");
                     }else(alert("Invalid login"))

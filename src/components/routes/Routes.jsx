@@ -11,7 +11,7 @@ const Routes = () => {
     //conditionally route based on the token value
 
     return(
-        <AuthorizationContext.Provider >
+        <AuthorizationContext.Provider value = {userData}>
             { userData ? <PrivateRoute /> : <PublicRoute /> }
         </AuthorizationContext.Provider>
     )
