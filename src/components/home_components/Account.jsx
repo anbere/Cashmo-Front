@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import CustModal from "./CustModal";
@@ -11,12 +11,23 @@ const Account = () => {
     const [modalShow, setModalShow] = useState(false);
 
     const userData = JSON.parse(sessionStorage.getItem('user'));
-    const userAccount = JSON.parse(sessionStorage.getItem('account'));
+    // const userAccount = JSON.parse(sessionStorage.getItem('account'));
+    const [userAccount, setUserAccount] = useState([]);
     const [depositTransaction, setDepositTransaction] = useState({})
 
     const [routingNumber, setRoutingNumber] = useState({
         ...userAccount
     });
+
+    useEffect(() => {
+		async function loadRequests() {
+			const temp = await JSON.parse(sessionStorage.getItem('account'))
+            setUserAccount(temp);
+		}
+		
+		loadRequests();
+		
+	}, [sessionStorage.getItem('account')])
 
     
 
@@ -67,6 +78,27 @@ const Account = () => {
             })
     }
 
+    const getTransactions = () => {
+		const url = 'http://localhost:8080/api/transaction/' + userData.username;
+
+		fetch(url,
+			{
+				method: "GET",
+				mode: 'cors',
+				headers: { "Content-Type": "application/json" },
+			})
+		.then(response => {
+		    if (response.ok) {
+		        console.log(response);
+		        return response.json();
+		    }
+		}).then(body => {
+		    console.log("List of transactions: ", body);
+		    sessionStorage.setItem('transactions', JSON.stringify(body))
+				history.push("/account")
+		});
+	}
+
     const sendDeposit = (event) =>
     {
         event.preventDefault();
@@ -85,6 +117,7 @@ const Account = () => {
                 console.log("body received form sendDeposit: ", body)
                 if(body.id !== null) {
                     sessionStorage.setItem('account', JSON.stringify(body))
+                    getTransactions();
                     history.push("/account");
                     alert("Deposit succesful")
                 }
@@ -93,11 +126,6 @@ const Account = () => {
                 }
             })
     }
-    
-
-    // const update = () => {
-    //     userData = JSON.parse(sessionStorage.getItem('user'));
-    // }
 
     function AccountView() {
         if (userAccount.routingNumber !== null) {
@@ -136,6 +164,7 @@ const Account = () => {
                             name="routingNumber"
                             placeholder="Routing Number" 
                             onChange={handleAccountChange}
+                            autoComplete="off"
                             />
                         <Button className="accountBtn" onClick={linkAccount}>Link Bank Account</Button>
                     </form>

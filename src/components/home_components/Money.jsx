@@ -72,6 +72,7 @@ const Money = () => {
 				alert("Request was from " + requestName + " was denied!")
 				getRequests();
 				getTransactions();
+				getAccount();
 			});
 	}
 
@@ -101,6 +102,7 @@ const Money = () => {
 				alert("Request was accepted, you paid: " + tempAmount)
 				getRequests();
 				getTransactions();
+				getAccount();
 			});
 	}
 
@@ -129,8 +131,10 @@ const Money = () => {
 				if(body.status == 'failed')
 				{
 					alert("Transaction failed")
+					return;
 				}
 				getTransactions();
+				getAccount();
 				alert("Payment has been sent!")
 			});
 	}
@@ -177,6 +181,25 @@ const Money = () => {
 		});
 	}
 
+	const getAccount = () => {
+		const url = 'http://localhost:8080/api/v1/account/' + userData.id;
+		fetch(url,
+			{
+				method: "GET",
+				mode: 'cors',
+				headers: { "Content-Type": "application/json" },
+			})
+			.then(response => {
+				if(response.ok)
+				{
+					return response.json();
+				}
+			}).then(body => {
+				sessionStorage.setItem('account', JSON.stringify(body));
+			})
+
+	}
+
 	const transactionRequest = () => {
 		console.log("Below is the Transaction Username: " + userData.username);
 		// console.log(transactionUsername);
@@ -199,8 +222,14 @@ const Money = () => {
 				console.log(response);
 			}).then(body => {
 				console.log("Response from sending request:", body)
+				if(body.status == 'failed')
+				{
+					alert("Transaction failed")
+					return;
+				}
 				getRequests();
 				getTransactions();
+				getAccount();
 				alert("Request has been sent!")
 			});
 	}
