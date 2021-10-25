@@ -72,7 +72,7 @@ const Login = () => {
 	}
 
 	const getTransactions = async () => {
-		const url = 'http://localhost:8080/api/v1/transaction';
+		const url = 'http://localhost:8080/api/transaction';
 
 		const request = await fetch(url,
 			{

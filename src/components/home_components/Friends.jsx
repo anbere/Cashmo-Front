@@ -32,15 +32,26 @@ const Friends = () => {
 
             }).then(response => {
                 if(response.ok){
-                    console.log(response);
                     return response.json();
                 }
+              
+           
             }).then(body => 
                 {
-                    console.log(body)
+                    console.log("BELOW IS RESPONSE");
+                    console.log(body);
+                    if(!body.username == ""){
+                        console.log("Added friendUsername is: " + friendUsername)
+                        console.log("Added userFriend is: " + body.username)
+                        alert("Friend Added!")
+                    }
+                    else{
+                        console.log("!Found friendUsername is: " + friendUsername)
+                        console.log("!Found userFriend is: " + body.username)
+                        alert("Friend not found!")
+                    }
                     getFriends();
-                    // history.push("/friends")
-                    alert("Friend Added!")
+              
                 });
     }
 
@@ -116,10 +127,7 @@ const Friends = () => {
     
     )
 }
-
 export default Friends;
-
-
 
 
 
