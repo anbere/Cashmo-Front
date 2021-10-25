@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
 
 function CustModal(props) {
 

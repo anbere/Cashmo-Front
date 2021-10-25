@@ -11,13 +11,12 @@ const PrivateRoute = (props) => {
     return (
         <>
             <Navbar bg="light" expand="lg">
-                <Container>
-                    <Navbar.Brand>CashMo</Navbar.Brand>
+                <Container fluid>
+                    <Navbar.Brand >CashMo</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-
-                            <Nav.Link as={Link} to="/home">Home</Nav.Link>
+                        <Nav >
+                            <Nav.Link  as={Link} to="/home">Home</Nav.Link>
 
                             <Nav.Link as={Link} to="/money">Money</Nav.Link>
 

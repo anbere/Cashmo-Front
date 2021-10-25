@@ -7,13 +7,12 @@ import Routes from './components/routes/Routes';
 function App() {
 
   return (
-    <div>
-        <Router>
-          <Switch>
-            <Routes/>
-          </Switch>
-        </Router>
-    </div>
+
+      <Router>
+        <Switch>
+          <Routes />
+        </Switch>
+      </Router>
   );
 }
 

@@ -1,7 +1,7 @@
 import e from "cors";
 import React, {useState} from "react";
 import { useHistory } from "react-router";
-import { Button, Container, Row, Col, Modal } from "react-bootstrap";
+import { Button, Container, Row, Col, Table } from "react-bootstrap";
 
 const Friends = () => {
 
@@ -75,17 +75,17 @@ const Friends = () => {
                     <h1>
                         Friends
                     </h1>
-                    <table>
+                    <Table striped bordered hover>
                         <thead>
-                            <tr style={{fontWeight: "BOLD", color: "red", backgroundColor: "white"}}>
+                            <tr>
                                 <td>Username</td>
                                 <td>First Name</td>
                                 <td>Last Name</td>
                                 <td>Email</td>
                             </tr>
                         </thead>
-
                         <tbody> {
+                            userFriend.length > 0?
                             userFriend.map((friends) => (
                                 <tr key = {friends.id}>
                                     <td>{friends.username}</td>
@@ -93,9 +93,10 @@ const Friends = () => {
                                     <td>{friends.lastName}</td>
                                     <td>{friends.email}</td>
                                 </tr>   
-                                ))}            
+                                )) : <tr/>
+                            }            
                         </tbody>
-                    </table>
+                    </Table>
                 </Col>
 
                 <Col>

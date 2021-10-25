@@ -1,28 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Table } from 'react-bootstrap'
 
  const TransactionTable = () => {
 
-    const userData = JSON.parse(sessionStorage.getItem('user'));
-    const userTransactions = JSON.parse(sessionStorage.getItem('transactions'))
+    const [userTransactions, setUserTransactions] = useState([]);
 
-    // const renderTableData = () => {
-    //     userTransactions.map((item) => {
-    //        return (
-    //           <tr key={id}>
-    //              <td>{id}</td>
-    //              <td>{amount}</td>
-    //              <td>{comment}</td>
-    //              <td>{date}</td>
-    //              <td>{status}</td>
-    //              <td>{type}</td>
-    //           </tr>
-    //        )
-    //     })
-    //  }
+    useEffect( () => {
+        async function loadTransactions() {
+            const temp = await JSON.parse(sessionStorage.getItem('transactions'))
+            setUserTransactions(temp);
+        }
+
+        loadTransactions();
+    },[])
 
     return (
-        <Container>
+        <Container className="transactions">
            <h1 id='title'>Transactions</h1>
            <Row>
                 <Table striped bordered hover>
@@ -37,6 +30,8 @@ import { Container, Row, Col, Table } from 'react-bootstrap'
                     </thead>
                     <tbody>
                         {
+                            userTransactions?
+                            userTransactions.length > 0?
                             userTransactions.map((item) => (
                                 <tr key={item.id}>
                                     <td>{item.amount}</td>
@@ -45,7 +40,7 @@ import { Container, Row, Col, Table } from 'react-bootstrap'
                                     <td>{item.status}</td>
                                     <td>{item.type}</td>
                                 </tr>
-                            ))
+                            )) : <tr></tr> : <tr/>
                         }
                     </tbody>
                 </Table>
