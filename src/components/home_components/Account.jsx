@@ -72,7 +72,7 @@ const Account = () => {
         event.preventDefault();
         console.log("Deposit Transaction before sent: ", depositTransaction);
 
-        const url = "http://localhost:8080/api/v1/transaction/deposit/"+userData.username;
+        const url = "http://localhost:8080/api/transaction/deposit/"+userData.username;
         fetch(url,
             {
                 method: "POST",

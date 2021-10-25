@@ -51,7 +51,6 @@ const Friends = () => {
                         alert("Friend not found!")
                     }
                     getFriends();
-              
                 });
     }
 
@@ -95,33 +94,31 @@ const Friends = () => {
                                 <td>Email</td>
                             </tr>
                         </thead>
-                        <tbody> {
-                            userFriend.length > 0?
-                            userFriend.map((friends) => (
+                        <tbody> 
+                            {
+                                userFriend.length > 0?
+                                userFriend.map((friends) => (
                                 <tr key = {friends.id}>
                                     <td>{friends.username}</td>
                                     <td>{friends.firstName}</td>
                                     <td>{friends.lastName}</td>
                                     <td>{friends.email}</td>
                                 </tr>   
-                                )) : <tr/>
+                                )):<tr/>
                             }            
                         </tbody>
                     </Table>
                 </Col>
-
                 <Col>
                     <h1>
                         Add Friend
                         <br/>
                     </h1>
-                    <form onSubmit = {handleSubmit}>  
-                        <input type="text" onChange = {(e) => setFriendName(e.target.value)} value = {friendName}  placeholder = "Friend Username"/>
-                        <Button type = "submit" className = "addFriend">Search</Button>
+                    <form onSubmit={handleSubmit}>  
+                        <input type="text" onChange={(e) => setFriendName(e.target.value)} value={friendName}  placeholder="Friend Username"/>
+                        <Button type="submit" className="addFriend">Search</Button>
                     </form>
-
                 </Col>
-
             </Row>
         </Container>
     

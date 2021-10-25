@@ -72,7 +72,7 @@ const Login = () => {
 	}
 
 	const getTransactions = async () => {
-		const url = 'http://localhost:8080/api/transaction';
+		const url = 'http://localhost:8080/api/transaction/' + formValue.username;
 
 		const request = await fetch(url,
 			{
@@ -96,6 +96,20 @@ const Login = () => {
 		// });
 	}
 
+	const getRequests = async () => {
+		console.log("Below is Transaction");
+		const url = 'http://localhost:8080/api/transaction/request/' + formValue.username;
+		const request = await fetch(url,
+			{
+				method: "GET",
+				mode: 'cors',
+				headers: { "Content-Type": "application/json" },
+			})
+
+			const response = await request.json();
+			return response;
+	}
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
@@ -113,15 +127,18 @@ const Login = () => {
 
 		if(!response.username == "") {
 		
-		const friends = await getFriends();
 		const transacts = await getTransactions();
+		const friends = await getFriends();
 		const accounts = await getAccount(response.id);
+		const requests = await getRequests();
 
 		sessionStorage.setItem('user', JSON.stringify(response))
 		sessionStorage.setItem('friends', JSON.stringify(friends));
 		sessionStorage.setItem('account', JSON.stringify(accounts));
 		sessionStorage.setItem('transactions', JSON.stringify(transacts));
+		sessionStorage.setItem('requests', JSON.stringify(requests));
 		history.push("/");
+
 	}else (alert("Invalid Credentials"))
 		
 			// .then(response => {
