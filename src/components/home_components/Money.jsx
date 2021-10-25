@@ -1,62 +1,64 @@
 import React, {useState} from "react";
 import { useHistory } from "react-router";
-import { Button, Container, Row, Col, Modal } from "react-bootstrap";
+import { Button, Container, Row, Col, Modal, Table } from "react-bootstrap";
 
 const Money = () => {
 
+    const [transInfo, setTransInfo] = useState({
+        destination: '',
+        type: '',
+        amount: '',
+        comment: '',
+    });
 
     const history = useHistory();
     const userData = JSON.parse(sessionStorage.getItem('user'));
-    const userFriend = JSON.parse(sessionStorage.getItem('friends'));
+    // const userTransaction = JSON.parse(sessionStorage.getItem('transaction'));
 
-    const [friendName, setFriendName] = useState('');
-
-    const handleSubmit = (event) => {
-        event.preventDefault()
-        console.log(friendName);
-        addFriends(friendName);
+    const handleTransaction = (event) => {
+        setTransInfo({
+            ...transInfo,
+            [event.target.name]: event.target.value
+        })
+        // event.preventDefault()
+        console.log("BELOW IS TRANS INFO");
+        console.log(transInfo);
+        // transactionPay(transInfo.destination);
     }
 
-    function addFriends(friendUsername) {
-        console.log("Below is FriendsOf");
-        console.log(friendUsername);
+    function transactionPay(destUsername) {
+        console.log("Below is the Transaction Username: " + userData.username);
+        // console.log(transactionUsername);
         console.log(userData)
 
-        const url='http://localhost:8080/api/v1/friends/'+friendUsername;
+        const url='http://localhost:8080/api/v1/pay/'+userData.username + '/' + destUsername;
         fetch(url,
             {
                 method: "POST",
                 mode: 'cors',
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(userData) //sending in the user object and a username
-
+                body: JSON.stringify({
+                    destination: transInfo.destination,
+                    type: transInfo.type,
+                    amount: transInfo.amount,
+                    comment: transInfo.comment
+                }) 
             }).then(response => {
                 if(response.ok){
                     return response.json();
                 }
                 console.log("BELOW IS RESPONSE");
                 console.log(response);
-                if(friendUsername === response.username){
-                    console.log("Added friendUsername is: " + friendUsername)
-                    console.log("Added userFriend is: " + response.username)
-                    alert("Friend Added!")
-                }
-                else{
-                    console.log("!Found friendUsername is: " + friendUsername)
-                    console.log("!Found userFriend is: " + response.username)
-                    alert("Friend not found!")
-                }
             }).then(body => 
                 {
                     console.log(body)
-                    getFriends();
-              
+                    // getTransaction();
                 });
     }
 
-    function getFriends() {
-        console.log("Below is FriendsOf");
-        const url='http://localhost:8080/api/v1/friends/';
+    function getTransaction() {
+        console.log("Below is Transaction");
+        const url='http://localhost:8080/api/v1/transaction/';
         fetch(url,
             {
                 method: "POST",
@@ -73,8 +75,8 @@ const Money = () => {
                 }
             }).then(body => 
                 {
-                    sessionStorage.setItem('friends', JSON.stringify(body));
-                    history.push("/friends")
+                    sessionStorage.setItem('transaction', JSON.stringify(body));
+                    history.push("/transaction")
                     console.log(body)
                 });
     }
@@ -83,11 +85,11 @@ const Money = () => {
             <Row >
                 <Col>
                     <h1>
-                        {userData.firstName}'s Transactions
+                        {userData.firstName}'s Transaction Summary
                     </h1>
-                    <table>
+                    <Table striped bordered hover>
                         <thead>
-                            <tr style={{fontWeight: "BOLD", color: "red", backgroundColor: "white"}}>
+                            <tr >
                                 <td>From</td>
                                 <td>Type</td>
                                 <td>Amount</td>
@@ -98,17 +100,19 @@ const Money = () => {
                             </tr>
                         </thead>
 
-                        <tbody> {
-                            userFriend.map((friends) => (
-                                <tr key = {friends.id}>
-                                    <td>{friends.username}</td>
-                                    <td>{friends.firstName}</td>
-                                    <td>{friends.lastName}</td>
-                                    <td>{friends.email}</td>
-                                </tr>   
-                                ))}            
-                        </tbody>
-                    </table>
+                        {/* <tbody> {
+                            // userTransaction.map((transaction) => (
+
+                            //     <tr key = {transaction.id}>
+                            //         <td>{transaction.username}</td>
+                            //         <td>{transaction.firstName}</td>
+                            //         <td>{transaction.lastName}</td>
+                            //         <td>{transaction.email}</td>
+                            //     </tr>   
+                            //     ))  
+                        }            
+                        </tbody> */}
+                    </Table>
                 </Col>
                 <Col>
                     <div>
@@ -119,27 +123,44 @@ const Money = () => {
                                     <label>To: </label>
                                 </div>
                                 <div>
-                                    <input type="text" placeholder = "Type in username" name = "To:"/>
+                                    <input 
+                                        type="text" 
+                                        value = {transInfo.destination} 
+                                        onChange = {handleTransaction} 
+                                        placeholder = "Type in username" 
+                                        name = "destination"
+                                    />
                                 </div>
                                 <div class="col-10">
                                     <label for="type"  required>Type:</label>
                                 </div>
                     <div class="col-90">
-                    <select name="type" id="type">
-                        <option value=" ">Select Type:</option>
-                        <option value="pay">Pay</option>
-                        <option value="request.">Request.</option>
-                    </select>
+                        <select name="type" id="type" 
+                            value = {transInfo.type}
+                            onChange = {handleTransaction}>
+                            <option value="">Select Type:</option>
+                                <option value="pay">Pay</option>
+                                <option value="request">Request</option>
+                        </select>
+
                         </div>
                             </div>
                                 <div class="row">
+                                <label for="amount">Amount:</label>
                                     <div class="col-10">
-                                        <label for="amount">Amount:</label>
+                                    <input 
+                                        type="number"
+                                        name="amount"
+                                        placeholder="Enter an amount"
+                                        value={transInfo.amount}
+                                        onChange={handleTransaction} 
+                                        min = "1"
+                                    />
+                                    <br/>
                                     </div>
-
-                                    <div class="col-90">
+                                    {/* <div class="col-90">
                                         <input type="number" id="amount" name="amount" maxlength="8" min="1" placeholder = "Enter an amount"/>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div class="row">
                                     <div class="col-10">
@@ -147,20 +168,26 @@ const Money = () => {
                                     </div>
 
                                     <div class="col-90">
-                                        <textarea name="description" id="description" cols="30" rows="10" placeholder="Write your comment here"></textarea>
+                                        <textarea name="description" 
+                                        value = {transInfo.comment} 
+                                        onChange = {handleTransaction} 
+                                        id="description" 
+                                        cols="30" rows="10" 
+                                        placeholder="Write your comment here"></textarea>
                                     </div>
                                     
                                 </div>
 
                                 <div class="">
-                                    <button type= "submit" style = {{color: "white", backgroundColor: "salmon"}}   >Submit</button>
-                                    {/* <input type="button" value="Pay" onclick="createTicket()"/>
-                                    <input type="button" value = "Request" onClick = "" /> */}
+                                    <form action="">
+                                        <Button type= "submit" onChange = {(e) => setTransInfo(e.target.value)} value = {transInfo} className = "createTransaction" style = {{color: "white", backgroundColor: "salmon"}}   >Submit</Button>
+                                        {/* <input type="button" value="Pay" onclick="createTicket()"/>
+                                        <input type="button" value = "Request" onClick = "" /> */}
+                                    </form>
                                 </div>
                             </div>
                         </div>
                 </Col>
-
             </Row>
         </Container>
     

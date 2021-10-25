@@ -1,156 +1,185 @@
-import React, { useState }from "react";
+import React, { useContext, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
 const Login = () => {
 
-    const history = useHistory();
+	const history = useHistory();
 
-    const [formValue, setformValue] = useState({
-        username: '',
-        password: ''
-    });
+	const [formValue, setformValue] = useState({
+		username: '',
+		password: ''
+	});
 
-    function getFriends(friendsOf) {
-        console.log("Below is FriendsOf");
-        console.log(friendsOf);
-        const url='http://localhost:8080/api/v1/friends/';
-        fetch(url,
-            {
-                method: "POST",
-                mode: 'cors',
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    username: formValue.username,
-                    password: formValue.password
-                })
-            }).then(response => {
-                if(response.ok){
-                    console.log(response);
-                    return response.json();
-                }
-            }).then(body => 
-                {
-                    sessionStorage.setItem('friends', JSON.stringify(body));
-                    console.log(body)
-                });
-    }
-    
-    function getAccount(id) {
-        const url='http://localhost:8080/api/v1/account/'+id;
-        fetch(url,
-            {
-                method: "GET",
-                mode: 'cors',
-                headers: {"Content-Type": "application/json"},
-            }).then(response => {
-                if(response.ok){
-                    console.log(response);
-                    return response.json();
-                }
-            }).then(body => 
-                {
-                    console.log(body)
-                    if(!body.id == "")
-                    {
-                        console.log(body);
-                        sessionStorage.setItem('account', JSON.stringify(body));
-                    }else(alert("account not receieved"))
-                });
-    }
+	const getFriends = async () => {
+		const url = 'http://localhost:8080/api/v1/friends/';
+		const request = await fetch(url,
+			{
+				method: "POST",
+				mode: 'cors',
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					username: formValue.username,
+					password: formValue.password
+				})
+			})
+		const response = await request.json();
+		return response;
 
-    function getTransactions() {
-        const url='http://localhost:8080/api/v1/transaction';
+		// sessionStorage.setItem('friends', JSON.stringify(response));
 
-        fetch(url,
-            {
-                method: "GET",
-                mode: 'cors',
-                headers: {"Content-Type": "application/json"},
-            }).then(response => {
-                if(response.ok){
-                    console.log(response);
-                    return response.json();
-                }
-            }).then(body => 
-                {
-                    console.log("List of transactions: ", body);
-                    sessionStorage.setItem('transactions', JSON.stringify(body))
-                });
-    }
+		// .then(response => {
+		//     if(response.ok){
+		//         console.log(response);
+		//         return response.json();
+		//     }
+		// }).then(body => 
+		//     {
+		//         sessionStorage.setItem('friends', JSON.stringify(body));
+		//         console.log("Friends list: ", body)
+		//     });
+	}
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+	const getAccount = async (id) => {
+		const url = 'http://localhost:8080/api/v1/account/' + id;
+		const request = await fetch(url,
+			{
+				method: "GET",
+				mode: 'cors',
+				headers: { "Content-Type": "application/json" },
+			})
+		const response = await request.json();
+		return response;
 
-        fetch("http://localhost:8080/api/v1/user/login",
-            {
-                method: "POST",
-                mode: 'cors',
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    username: formValue.username,
-                    password: formValue.password
-                })
-            }).then(response => {
-                if(response.ok){
-                    console.log(response);
-                    return response.json();
-                }
-            }).then(body => 
-                {
-                    console.log(body)
-                    if(!body.username=="")
-                    {
-                        getAccount(body.id);
-                        getTransactions();
-                        getFriends(body);
-                        sessionStorage.setItem('user', JSON.stringify(body));
-                        history.push("/");
-                    }else(alert("Invalid login"))
-                });
+		// if (!response.id == "") {
+		// 	console.log("response from getAccount: ", response);
+		// 	sessionStorage.setItem('account', JSON.stringify(response));
+		// } else (alert("account not receieved"))
 
-        
-    }
 
-    const handleChange = (event) => {
-        setformValue({
-            ...formValue,
-            [event.target.name]: event.target.value
-        })
-    }
+		// .then(response => {
+		//     if (response.ok) {
+		//         console.log(response);
+		//         return response.json();
+		//     }
+		// }).then(body => {
+		//     console.log(body)
+		//     if (!body.id == "") {
+		//         console.log(body);
+		//         sessionStorage.setItem('account', JSON.stringify(body));
+		//     } else (alert("account not receieved"))
+		// });
+	}
 
-    return (
-        <div className="App">
-            <form className="logister" onSubmit={handleSubmit}>
-                <p>Login to Get Started</p>
-                <input 
-                    type="text"
-                    name="username" 
-                    placeholder="Username"
-                    value={formValue.username}
-                    onChange={handleChange}
-                    autoComplete="off" 
-                />
-                <br/>
-                <input 
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formValue.password}
-                    onChange={handleChange} 
-                />
-                <br/>
-                <Button
-                    color="primary"
-                    type="submit"
-                >
-                    Login
-                </Button>
-            </form>
+	const getTransactions = async () => {
+		const url = 'http://localhost:8080/api/transaction';
 
-            <Link to="/registration">Register</Link>
-        </div>
-    )
+		const request = await fetch(url,
+			{
+				method: "GET",
+				mode: 'cors',
+				headers: { "Content-Type": "application/json" },
+			})
+		const response = await request.json();
+		return response;
+		// console.log("List of transactions: ", response);
+		// sessionStorage.setItem('transactions', JSON.stringify(response))
+
+		// .then(response => {
+		//     if (response.ok) {
+		//         console.log(response);
+		//         return response.json();
+		//     }
+		// }).then(body => {
+		//     console.log("List of transactions: ", body);
+		//     sessionStorage.setItem('transactions', JSON.stringify(body))
+		// });
+	}
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+
+		const request = await fetch("http://localhost:8080/api/v1/user/login",
+			{
+				method: "POST",
+				mode: 'cors',
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					username: formValue.username,
+					password: formValue.password
+				})
+			})
+		const response = await request.json();
+
+		if(!response.username == "") {
+		
+		const friends = await getFriends();
+		const transacts = await getTransactions();
+		const accounts = await getAccount(response.id);
+
+		sessionStorage.setItem('user', JSON.stringify(response))
+		sessionStorage.setItem('friends', JSON.stringify(friends));
+		sessionStorage.setItem('account', JSON.stringify(accounts));
+		sessionStorage.setItem('transactions', JSON.stringify(transacts));
+		history.push("/");
+	}else (alert("Invalid Credentials"))
+		
+			// .then(response => {
+			// 	if (response.ok) {
+			// 		console.log(response);
+			// 		return response.json();
+			// 	}
+			// }).then(body => {
+			// 	console.log(body)
+			// 	if (!body.username == "") {
+			// 		getTransactions();
+			// 		getAccount(body.id);
+			// 		getFriends();
+			// 		sessionStorage.setItem('user', JSON.stringify(body));
+			// 		history.push("/");
+			// 	} else (alert("Invalid login"))
+			// });
+	}
+
+	const handleChange = (event) => {
+		setformValue({
+			...formValue,
+			[event.target.name]: event.target.value
+		})
+	}
+
+	return (
+		<div className="App">
+			<form className="logister" onSubmit={handleSubmit}>
+				<p>Login to Get Started</p>
+				<input
+					type="text"
+					name="username"
+					placeholder="Username"
+					value={formValue.username}
+					onChange={handleChange}
+					autoComplete="off"
+				/>
+				<br />
+				<input
+					type="password"
+					name="password"
+					placeholder="Password"
+					value={formValue.password}
+					onChange={handleChange}
+				/>
+				<br />
+				<Button
+					color="primary"
+					type="submit"
+				>
+					Login
+				</Button>
+			</form>
+
+			<Link to="/registration">Register</Link>
+		</div>
+	)
 
 };
 

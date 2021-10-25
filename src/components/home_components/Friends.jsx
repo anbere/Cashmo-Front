@@ -1,7 +1,7 @@
 import e from "cors";
 import React, {useState} from "react";
 import { useHistory } from "react-router";
-import { Button, Container, Row, Col, Modal } from "react-bootstrap";
+import { Button, Container, Row, Col, Modal, Table } from "react-bootstrap";
 
 const Friends = () => {
 
@@ -34,21 +34,22 @@ const Friends = () => {
                 if(response.ok){
                     return response.json();
                 }
-                console.log("BELOW IS RESPONSE");
-                console.log(response);
-                if(friendUsername === response.username){
-                    console.log("Added friendUsername is: " + friendUsername)
-                    console.log("Added userFriend is: " + response.username)
-                    alert("Friend Added!")
-                }
-                else{
-                    console.log("!Found friendUsername is: " + friendUsername)
-                    console.log("!Found userFriend is: " + response.username)
-                    alert("Friend not found!")
-                }
+              
+           
             }).then(body => 
                 {
-                    console.log(body)
+                    console.log("BELOW IS RESPONSE");
+                    console.log(body);
+                    if(!body.username == ""){
+                        console.log("Added friendUsername is: " + friendUsername)
+                        console.log("Added userFriend is: " + body.username)
+                        alert("Friend Added!")
+                    }
+                    else{
+                        console.log("!Found friendUsername is: " + friendUsername)
+                        console.log("!Found userFriend is: " + body.username)
+                        alert("Friend not found!")
+                    }
                     getFriends();
               
                 });
@@ -85,9 +86,10 @@ const Friends = () => {
                     <h1>
                         Friends
                     </h1>
-                    <table>
+                    <Table striped bordered hover>
                         <thead>
-                            <tr style={{fontWeight: "BOLD", color: "red", backgroundColor: "white"}}>
+                        {/* style={{fontWeight: "BOLD", color: "red", backgroundColor: "white"}} */}
+                            <tr >
                                 <td>Username</td>
                                 <td>First Name</td>
                                 <td>Last Name</td>
@@ -105,7 +107,7 @@ const Friends = () => {
                                 </tr>   
                                 ))}            
                         </tbody>
-                    </table>
+                    </Table>
                 </Col>
 
                 <Col>
