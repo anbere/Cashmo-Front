@@ -1,5 +1,6 @@
 import React from "react";
-import "./Home.css"
+
+import TransactionTable from "../tables/TransactionTable";
 
 const HomePage = () => {
 
@@ -7,6 +8,7 @@ const HomePage = () => {
     return (
         <>
             <h1>Welcome, {userData.username}</h1>
+            <TransactionTable></TransactionTable>
         </>
     )
 }
